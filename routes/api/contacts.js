@@ -7,6 +7,7 @@ const {
   listContacts,
   getContactById,
   addContact,
+  removeContact,
 } = require("../../models/contacts");
 
 // @ GET /api/contacts
@@ -68,8 +69,22 @@ router.post("/", async (req, res, next) => {
   next;
 });
 
+// @ DELETE /api/contacts/:id
+// Не получает body
+// Получает параметр id
+// вызывает функцию removeContact для работы с json-файлом contacts.json
+// если такой id есть, возвращает json формата {"message": "contact deleted"} и статусом 200
+// если такого id нет, возвращает json с ключом "message": "Not found" и статусом 404
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "4template message" });
+  const id = req.params.contactId;
+  const data = await removeContact(id);
+  if (!data) {
+    res.status(404).json({ message: "Not found" });
+
+    return;
+  }
+  res.status(200).json({ message: "contact deleted" });
+  next;
 });
 
 router.put("/:contactId", async (req, res, next) => {

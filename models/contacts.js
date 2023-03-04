@@ -78,7 +78,35 @@ const addContact = async (body) => {
   }
 };
 
-const removeContact = async (contactId) => {};
+const removeContact = async (contactId) => {
+  try {
+    const contactsList = await fs.readFile(contactsPath, "utf8");
+    const parsedContactsList = JSON.parse(contactsList);
+
+    const updatedContactsList = parsedContactsList.filter(
+      ({ id }) => id !== contactId.toString()
+    );
+
+    if (parsedContactsList.length === updatedContactsList.length) {
+      console.log(`Contact with id ${contactId} is missing in list`);
+      return false;
+    }
+
+    await fs.writeFile(
+      contactsPath,
+      JSON.stringify(updatedContactsList),
+      "utf8"
+    );
+
+    //const contactsListAfterRemove = await fs.readFile(contactsPath, "utf8");
+    await fs.readFile(contactsPath, "utf8");
+    // console.table(JSON.parse(contactsListAfterRemove));
+    console.log("Contact deleted");
+    return true;
+  } catch (error) {
+    return console.log("Something went wrong:", error);
+  }
+};
 
 const updateContact = async (contactId, body) => {};
 
