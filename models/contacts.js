@@ -1,6 +1,5 @@
 const fs = require("fs/promises");
 const path = require("path");
-const { v4: id } = require("uuid");
 
 const contactsPath = path.join(__dirname, "/contacts.json");
 
@@ -11,7 +10,8 @@ const listContacts = async () => {
 
     return parsedContactsList;
   } catch (error) {
-    return console.log("Something went wrong:", error);
+    console.log("Something went wrong:", error);
+    return { message: "Something went wrong" };
   }
 };
 
@@ -24,21 +24,14 @@ const getContactById = async (contactId) => {
       ({ id }) => id === contactId.toString()
     );
 
-    // if (contactToGet.length === 0) {
-    //   return console.log(`Contact with id: ${contactId} is missing`);
-    // }
-
     return contactToGet;
   } catch (error) {
-    return console.log("Something went wrong:", error);
+    console.log("Something went wrong:", error);
+    return { message: "Something went wrong" };
   }
 };
-//addContact(body) для сохранения контакта в файле contacts.json
+
 const addContact = async (body) => {
-  //!!!!!!!!разобраться с body и newContact!!!!!!!!!!
-  //return body;
-  const newContact = body;
-  // return newContact;
   try {
     const contactsList = await fs.readFile(contactsPath, "utf8");
     const parsedContactsList = JSON.parse(contactsList);
@@ -54,24 +47,17 @@ const addContact = async (body) => {
     );
 
     if (nameToAdd || emailToAdd || phoneToAdd) {
-      //return console.log("The contact with same data already exists");
+      console.log("The contact with same data already exists");
       return { message: "The contact with same data already exists" };
     }
     if (!nameToAdd && !emailToAdd && !phoneToAdd) {
       console.log(`New contact ${body.name} succesfully added to the list`);
     }
 
-    const updatedContactsList = JSON.stringify([
-      ...parsedContactsList,
-      newContact,
-    ]);
+    const updatedContactsList = JSON.stringify([...parsedContactsList, body]);
 
     await fs.writeFile(contactsPath, updatedContactsList, "utf8");
-
-    const contactsListAfterAdding = await fs.readFile(contactsPath, "utf8");
-    //console.log(contactsListAfterAdding);
-    return JSON.parse(contactsListAfterAdding);
-    //return console.table(JSON.parse(contactsListAfterAdding));
+    return;
   } catch (error) {
     console.log("Something went wrong:", error);
     return { message: "Something went wrong" };
@@ -98,44 +84,34 @@ const removeContact = async (contactId) => {
       "utf8"
     );
 
-    //const contactsListAfterRemove = await fs.readFile(contactsPath, "utf8");
     await fs.readFile(contactsPath, "utf8");
-    // console.table(JSON.parse(contactsListAfterRemove));
+
     console.log("Contact deleted");
     return true;
   } catch (error) {
-    //!!!!!!!!!!!!!!подправить что возвращает!!!!!!!!!!
-    return console.log("Something went wrong:", error);
+    console.log("Something went wrong:", error);
+    return { message: "Something went wrong" };
   }
 };
 
-//updateContact(contactId, body) (напиши ее) для обновления контакта в файле contacts.json
 const updateContact = async (contactId, body) => {
   try {
-    //1. достаём список контактов
     const contactsList = await fs.readFile(contactsPath, "utf8");
     const parsedContactsList = JSON.parse(contactsList);
-    //console.log(parsedContactsList); //массив объектов
 
-    //2. ищем в списке контактов индекс объекта(контакта) с id === contactId
     const contactToUpdateIndex = parsedContactsList.findIndex(
       ({ id }) => id === contactId.toString()
     );
-    //console.log(contactToUpdateIndex);
 
-    //3. если нет контакта с id === contactId (contactToUpdateIndex = -1)
     if (contactToUpdateIndex < 0) {
       console.log(`The is no contact with id ${contactId}`);
       return false;
     }
 
-    //4. если есть контакт с id === contactId
-    //4.1. вытаскиваем этот контакт(объект) из массива
     const contactToUpdate = parsedContactsList[contactToUpdateIndex];
-    //4.2. обновляем контакт
+
     parsedContactsList[contactToUpdateIndex] = { ...contactToUpdate, ...body };
-    //console.log(parsedContactsList);
-    //4.3. записываем в файл контактов
+
     await fs.writeFile(
       contactsPath,
       JSON.stringify(parsedContactsList),
@@ -144,8 +120,8 @@ const updateContact = async (contactId, body) => {
 
     return parsedContactsList[contactToUpdateIndex];
   } catch (error) {
-    //!!!!!!!!!!!!!!подправить что возвращает!!!!!!!!!!
-    return console.log("Something went wrong:", error);
+    console.log("Something went wrong:", error);
+    return { message: "Something went wrong" };
   }
 };
 
