@@ -1,14 +1,8 @@
 const express = require("express");
 const { v4: id } = require("uuid");
-const Joi = require("joi");
-const schema = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
-});
 
 const router = express.Router();
-console.log(444);
+
 const {
   listContacts,
   getContactById,
@@ -16,6 +10,10 @@ const {
   removeContact,
   updateContact,
 } = require("../../models/contacts");
+const {
+  bodyValidation,
+  updateContactValidation,
+} = require("../../validation/validation");
 
 // @ GET /api/contacts
 // ничего не получает
@@ -51,19 +49,14 @@ router.get("/:contactId", async (req, res, next) => {
 // Вызывает функцию addContact(body) для сохранения контакта в файле contacts.json
 // По результату работы функции возвращает объект с добавленным id {id, name, email, phone} и статусом 201
 router.post("/", async (req, res, next) => {
-  //!!!!!!деструктуризировать!!!!!!
   const data = req.body;
 
-  //======BODY VALIDATION==========//
-
-  const validationInfo = schema.validate(data);
-
+  const validationInfo = bodyValidation.validate(data);
   if (validationInfo.error) {
     res.status(400).json({ message: "missing required name field" });
     return;
   }
 
-  //======BODY VALIDATION==========//
   const newContact = {
     id: id(),
     name: data.name,
@@ -106,8 +99,9 @@ router.put("/:contactId", async (req, res, next) => {
   const id = req.params.contactId;
   const body = req.body;
 
-  const emptyBody = !Object.keys(body).length;
-  if (emptyBody) {
+  const validationInfo = updateContactValidation.validate(body);
+
+  if (validationInfo.error) {
     res.status(400).json({ message: "missing fields" });
     return;
   }
