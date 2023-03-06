@@ -8,6 +8,7 @@ const {
   getContactById,
   addContact,
   removeContact,
+  updateContact,
 } = require("../../models/contacts");
 
 // @ GET /api/contacts
@@ -87,8 +88,23 @@ router.delete("/:contactId", async (req, res, next) => {
   next;
 });
 
+// @ PUT /api/contacts/:id
+// Получает параметр id
+// Получает body в json-формате c обновлением любых полей name, email и phone
+// Если body нет, возвращает json с ключом {"message": "missing fields"} и статусом 400
+// Если с body все хорошо, вызывает функцию updateContact(contactId, body) (напиши ее) для обновления контакта в файле contacts.json
+// По результату работы функции возвращает обновленный объект контакта и статусом 200. В противном случае, возвращает json с ключом "message": "Not found" и статусом 404
 router.put("/:contactId", async (req, res, next) => {
-  res.json({ message: "5template message" });
+  const id = req.params.contactId;
+  const body = req.body;
+
+  const data = await updateContact(id, body);
+  if (!data) {
+    res.status(404).json({ message: "Not found" });
+    return;
+  }
+  res.status(200).json(data);
+  next;
 });
 
 module.exports = router;

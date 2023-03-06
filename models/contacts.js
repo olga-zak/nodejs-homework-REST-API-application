@@ -104,11 +104,50 @@ const removeContact = async (contactId) => {
     console.log("Contact deleted");
     return true;
   } catch (error) {
+    //!!!!!!!!!!!!!!подправить что возвращает!!!!!!!!!!
     return console.log("Something went wrong:", error);
   }
 };
 
-const updateContact = async (contactId, body) => {};
+//updateContact(contactId, body) (напиши ее) для обновления контакта в файле contacts.json
+const updateContact = async (contactId, body) => {
+  try {
+    //1. достаём список контактов
+    const contactsList = await fs.readFile(contactsPath, "utf8");
+    const parsedContactsList = JSON.parse(contactsList);
+    //console.log(parsedContactsList); //массив объектов
+
+    //2. ищем в списке контактов индекс объекта(контакта) с id === contactId
+    const contactToUpdateIndex = parsedContactsList.findIndex(
+      ({ id }) => id === contactId.toString()
+    );
+    //console.log(contactToUpdateIndex);
+
+    //3. если нет контакта с id === contactId (contactToUpdateIndex = -1)
+    if (contactToUpdateIndex < 0) {
+      console.log(`The is no contact with id ${contactId}`);
+      return false;
+    }
+
+    //4. если есть контакт с id === contactId
+    //4.1. вытаскиваем этот контакт(объект) из массива
+    const contactToUpdate = parsedContactsList[contactToUpdateIndex];
+    //4.2. обновляем контакт
+    parsedContactsList[contactToUpdateIndex] = { ...contactToUpdate, ...body };
+    //console.log(parsedContactsList);
+    //4.3. записываем в файл контактов
+    await fs.writeFile(
+      contactsPath,
+      JSON.stringify(parsedContactsList),
+      "utf8"
+    );
+
+    return parsedContactsList[contactToUpdateIndex];
+  } catch (error) {
+    //!!!!!!!!!!!!!!подправить что возвращает!!!!!!!!!!
+    return console.log("Something went wrong:", error);
+  }
+};
 
 module.exports = {
   listContacts,
