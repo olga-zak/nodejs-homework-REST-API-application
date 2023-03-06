@@ -98,7 +98,14 @@ router.put("/:contactId", async (req, res, next) => {
   const id = req.params.contactId;
   const body = req.body;
 
+  const emptyBody = !Object.keys(body).length;
+  if (emptyBody) {
+    res.status(400).json({ message: "missing fields" });
+    return;
+  }
+
   const data = await updateContact(id, body);
+
   if (!data) {
     res.status(404).json({ message: "Not found" });
     return;
