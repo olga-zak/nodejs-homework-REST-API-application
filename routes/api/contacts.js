@@ -1,5 +1,11 @@
 const express = require("express");
 const { v4: id } = require("uuid");
+const Joi = require("joi");
+const schema = Joi.object({
+  name: Joi.string().alphanum().min(3).max(30).required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+});
 
 const router = express.Router();
 console.log(444);
@@ -47,15 +53,17 @@ router.get("/:contactId", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   //!!!!!!деструктуризировать!!!!!!
   const data = req.body;
-  //======BODY VALIADATION==========//
-  //Для маршрутов, что принимают данные (POST и PUT), продумайте проверку (валидацию) принимаемых данных. Для валидации принимаемых данных используйте пакет joi
-  //express validator
-  //https://developer.mozilla.org/ru/docs/Learn/Server-side/Express_Nodejs/forms
-  if (data.name === "" || data.email === "" || data.phone === "") {
+
+  //======BODY VALIDATION==========//
+
+  const validationInfo = schema.validate(data);
+
+  if (validationInfo.error) {
     res.status(400).json({ message: "missing required name field" });
     return;
   }
-  //======BODY VALIADATION==========//
+
+  //======BODY VALIDATION==========//
   const newContact = {
     id: id(),
     name: data.name,
