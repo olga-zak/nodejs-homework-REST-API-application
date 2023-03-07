@@ -9,7 +9,7 @@ const {
   addContact,
   removeContact,
   updateContact,
-} = require("../../models/contacts");
+} = require("../../controllers/contacts");
 const {
   bodyValidation,
   updateContactValidation,
