@@ -4,11 +4,6 @@ const router = express.Router();
 
 const controller = require("../../controllers");
 
-// const {
-//   bodyValidation,
-//   updateContactValidation,
-// } = require("../../validation/validation");
-
 // @ GET /api/contacts
 // ничего не получает
 // вызывает функцию listContacts для работы с json-файлом contacts.json
@@ -46,5 +41,13 @@ router.delete("/:contactId", controller.removeContactController);
 // Если с body все хорошо, вызывает функцию updateContact(contactId, body) (напиши ее) для обновления контакта в файле contacts.json
 // По результату работы функции возвращает обновленный объект контакта и статусом 200. В противном случае, возвращает json с ключом "message": "Not found" и статусом 404
 router.put("/:contactId", controller.updateContactController);
+
+// @ PATCH /api/contacts/:contactId/favorite
+// Получает параметр contactId
+// Получает body в json-формате c обновлением поля favorite
+// Если body нет, возвращает json с ключом {"message": "missing field favorite"} и статусом 400
+// Если с body все хорошо, вызывает функцию updateStatusContact(contactId, body) (напиши ее) для обновления контакта в базе
+// По результату работы функции возвращает обновленный объект контакта и статусом 200. В противном случае, возвращает json с ключом "message": "Not found" и статусом 404
+router.patch("/:contactId/favorite", controller.updateContactStatusController);
 
 module.exports = router;
