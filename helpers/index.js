@@ -1,3 +1,4 @@
 const controllerWrapper = require("./controllerWrapper");
+const returnError = require("./returnError");
 
-module.exports = { controllerWrapper };
+module.exports = { controllerWrapper, returnError };
