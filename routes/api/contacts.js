@@ -4,6 +4,12 @@ const router = express.Router();
 
 const controller = require("../../controllers");
 const { controllerWrapper } = require("../../helpers");
+const validateBody = require("../../validation/validateBody");
+const {
+  bodySchema,
+  bodySchemaForUpdateContact,
+  bodySchemaForUpdateContactStatus,
+} = require("../../validation/validationSchemas");
 
 // @ GET /api/contacts
 // ничего не получает
@@ -28,7 +34,11 @@ router.get(
 // Если с body все хорошо, добавляет уникальный идентификатор в объект контакта
 // Вызывает функцию addContact(body) для сохранения контакта в файле contacts.json
 // По результату работы функции возвращает объект с добавленным id {id, name, email, phone} и статусом 201
-router.post("/", controllerWrapper(controller.addContactController));
+router.post(
+  "/",
+  validateBody(bodySchema),
+  controllerWrapper(controller.addContactController)
+);
 
 // @ DELETE /api/contacts/:id
 // Не получает body
@@ -49,6 +59,10 @@ router.delete(
 // По результату работы функции возвращает обновленный объект контакта и статусом 200. В противном случае, возвращает json с ключом "message": "Not found" и статусом 404
 router.put(
   "/:contactId",
+  //есть проверка на то что в боди что-то есть
+  //но нет проверки что новые данные отличаются от старых?
+  //add unique into bodySchemaForUpdateContact??
+  validateBody(bodySchemaForUpdateContact),
   controllerWrapper(controller.updateContactController)
 );
 
@@ -60,6 +74,7 @@ router.put(
 // По результату работы функции возвращает обновленный объект контакта и статусом 200. В противном случае, возвращает json с ключом "message": "Not found" и статусом 404
 router.patch(
   "/:contactId/favorite",
+  validateBody(bodySchemaForUpdateContactStatus),
   controllerWrapper(controller.updateContactStatusController)
 );
 
