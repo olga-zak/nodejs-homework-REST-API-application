@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 
-const { requestError, handleSchemaValidationErrors } = require("../helpers");
+const { handleSchemaValidationErrors } = require("../helpers");
 
 const emailRegexp = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
 
@@ -36,7 +36,8 @@ userSchema.post("save", handleSchemaValidationErrors);
 //===========joi Schema===========//
 const registerUserJoiSchema = Joi.object({
   name: Joi.string().required(),
-  email: Joi.string().pattern(emailRegexp).required(),
+  email: Joi.string().required(),
+  //email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().required(),
 });
 
@@ -50,6 +51,6 @@ const schemas = {
   loginUserJoiSchema,
 };
 
-const User = model("book", bookSchma);
+const User = model("user", userSchema);
 
-module.exports = { Book, schemas }; //3.2 lesson 57:55 если запутаюсь с импортом
+module.exports = { User, schemas }; //3.2 lesson 57:55 если запутаюсь с импортом

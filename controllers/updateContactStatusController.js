@@ -7,7 +7,7 @@ const updateContactStatusController = async (req, res, next) => {
 
   const data = await updateStatusContact(id, body);
   if (!data) {
-    throw returnError(404, "Not found");
+    throw returnError(404, "3Not found");
   }
   res.status(200).json(data);
   next;
