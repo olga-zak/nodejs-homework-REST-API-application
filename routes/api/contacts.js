@@ -16,7 +16,11 @@ const { authenticate } = require("../../middlewares");
 // ничего не получает
 // вызывает функцию listContacts для работы с json-файлом contacts.json
 // возвращает массив всех контактов в json-формате со статусом 200
-router.get("/", controllerWrapper(controller.listContactsController));
+router.get(
+  "/",
+  authenticate,
+  controllerWrapper(controller.listContactsController)
+);
 
 // @ GET /api/contacts/:id
 // Не получает body
