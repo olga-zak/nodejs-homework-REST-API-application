@@ -11,6 +11,7 @@ const {
   bodySchemaForUpdateContactStatus,
 } = require("../../validation/validationSchemas");
 
+const { authenticate } = require("../../middlewares");
 // @ GET /api/contacts
 // ничего не получает
 // вызывает функцию listContacts для работы с json-файлом contacts.json
@@ -36,6 +37,7 @@ router.get(
 // По результату работы функции возвращает объект с добавленным id {id, name, email, phone} и статусом 201
 router.post(
   "/",
+  authenticate,
   validateBody(bodySchema),
   controllerWrapper(controller.addContactController)
 );

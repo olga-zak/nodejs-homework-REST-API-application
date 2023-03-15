@@ -15,7 +15,7 @@ const authenticate = async (req, res, next) => {
 
     const payload = jwt.verify(token, SECRET_KEY);
     //если ок, то возвращает payload (напр. создавали его в login.js - там payload - id)
-    console.log(payload); //{ user: '641114ca704a4845d824d892', iat: 1678844517, exp: 1678930917 }
+    //console.log(payload); //{ user: '641114ca704a4845d824d892', iat: 1678844517, exp: 1678930917 }
     //если не ок(не верифицирован) - выбрасывает ошибку, но в ней ни error.status, ни error.message
     //в catch добавляем условие
 
@@ -24,6 +24,7 @@ const authenticate = async (req, res, next) => {
     if (!user) {
       throw returnError(401, "Not authorized - no user found");
     }
+    req.user = user;
     //Если пользователь существует и токен совпадает с тем, что находится в базе, записать его данные в req.user и вызвать методnext().
     next();
   } catch (error) {
