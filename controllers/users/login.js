@@ -23,7 +23,7 @@ const login = async (req, res) => {
   }
   //если юзер есть и password ок
   const payload = {
-    user: user._id,
+    id: user._id,
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
 
