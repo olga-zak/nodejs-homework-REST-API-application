@@ -7,24 +7,6 @@ const emailRegexp = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
 
 //===========mongoose Schema===========//
 const userSchema = new Schema(
-  // {
-  //   name: {
-  //     type: String,
-  //     //required: true,
-  //     required: [true, "Contact name should exist"],
-  //   },
-  //   email: {
-  //     type: String,
-  //     //match: emailRegexp,
-  //     //unique: true, //4.1 lesson 22:55 //3.2 lesson 1:24
-  //     required: true,
-  //   },
-  //   password: {
-  //     type: String,
-  //     // minlength: 6,
-  //     required: true,
-  //   },
-  // },
   {
     password: {
       type: String,
@@ -33,7 +15,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email is required"],
-      //unique: true,
+      unique: true,
     },
     subscription: {
       type: String,
@@ -58,8 +40,8 @@ const registerUserJoiSchema = Joi.object({
   password: Joi.string().required(),
   email: Joi.string().required(),
   //email: Joi.string().pattern(emailRegexp).required(), //+unique
-  subscription: Joi.string().default("starter"),
-  token: Joi.string().default(null),
+  // subscription: Joi.string().default("starter"),
+  // token: Joi.string().default(null),
 });
 
 const loginUserJoiSchema = Joi.object({
