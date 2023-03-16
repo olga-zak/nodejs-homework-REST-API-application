@@ -54,6 +54,7 @@ router.post(
 // если такого id нет, возвращает json с ключом "message": "Not found" и статусом 404
 router.delete(
   "/:contactId",
+  authenticate,
   controllerWrapper(controller.removeContactController)
 );
 
@@ -68,6 +69,7 @@ router.put(
   //есть проверка на то что в боди что-то есть
   //но нет проверки что новые данные отличаются от старых?
   //add unique into bodySchemaForUpdateContact??
+  authenticate,
   validateBody(bodySchemaForUpdateContact),
   controllerWrapper(controller.updateContactController)
 );
@@ -80,6 +82,7 @@ router.put(
 // По результату работы функции возвращает обновленный объект контакта и статусом 200. В противном случае, возвращает json с ключом "message": "Not found" и статусом 404
 router.patch(
   "/:contactId/favorite",
+  authenticate,
   validateBody(bodySchemaForUpdateContactStatus),
   controllerWrapper(controller.updateContactStatusController)
 );
