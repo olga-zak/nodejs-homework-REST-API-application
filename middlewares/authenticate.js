@@ -15,7 +15,7 @@ const authenticate = async (req, res, next) => {
 
     const payload = jwt.verify(token, SECRET_KEY);
     //если ок, то возвращает payload (напр. создавали его в login.js - там payload - id)
-    //console.log(payload); //{ user: '641114ca704a4845d824d892', iat: 1678844517, exp: 1678930917 }
+    //console.log(payload); //{ id: '641114ca704a4845d824d892', iat: 1678844517, exp: 1678930917 }
     //если не ок(не верифицирован) - выбрасывает ошибку, но в ней ни error.status, ни error.message
     //в catch добавляем условие
 
