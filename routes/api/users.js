@@ -6,6 +6,7 @@ const validateBody = require("../../validation/validateBody");
 const { schemas } = require("../../schemas/userSchema");
 const { controllerWrapper } = require("../../helpers");
 const controller = require("../../controllers/users");
+const { authenticate } = require("../../middlewares");
 
 // Регистрация
 //@ POST api/users/register
@@ -34,4 +35,24 @@ router.post(
   validateBody(schemas.loginUserJoiSchema),
   controllerWrapper(controller.login)
 );
+
+// Логаут
+// Создайте ендпоинт /users/logout
+// Добавьте в маршрут мидлвар проверки токена.
+// В модели User найти пользователя по _id.
+// Если пользователя не существует вернуть Ошибку Unauthorized.
+// В противном случае, удалить токен в текущем юзере и вернуть Успешный ответ.
+router.post("/logout", authenticate, controllerWrapper(controller.logout));
+
+// Текущий пользователь - получить данные юзера по токену
+// Создайте эндпоинт /users/current
+// Добавьте в маршрут мидлвар проверки токена.
+// Если пользователя не существует вернуть Ошибку Unauthorized
+// В противном случае вернуть Успешный ответ
+router.get(
+  "/current",
+  authenticate,
+  controllerWrapper(controller.getCurrentUser)
+);
+
 module.exports = router;
