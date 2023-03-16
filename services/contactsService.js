@@ -5,7 +5,7 @@ const listContacts = async (owner, page, limit) => {
   return await Contact.find({ owner }, "-createdAt -updatedAt", {
     skip, //сколько пропустить элементов
     limit, //сколько извлечь элементов
-  });
+  }).populate("owner", "email subscription");
 };
 
 const getContactById = async (contactId) => {
