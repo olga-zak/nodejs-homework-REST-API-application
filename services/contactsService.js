@@ -1,7 +1,11 @@
 const Contact = require("./contactSchema");
 
-const listContacts = async (owner) => {
-  return await Contact.find({ owner });
+const listContacts = async (owner, page, limit) => {
+  const skip = (page - 1) * limit;
+  return await Contact.find({ owner }, "-createdAt -updatedAt", {
+    skip, //сколько пропустить элементов
+    limit, //сколько извлечь элементов
+  });
 };
 
 const getContactById = async (contactId) => {
