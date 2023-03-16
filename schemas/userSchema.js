@@ -39,15 +39,15 @@ userSchema.post("save", handleSchemaValidationErrors);
 //===========joi Schema===========//
 const registerUserJoiSchema = Joi.object({
   password: Joi.string().required(),
-  email: Joi.string().required(),
-  //email: Joi.string().pattern(emailRegexp).required(), //+unique
+  //email: Joi.string().required(),
+  email: Joi.string().pattern(emailRegexp).required(),
   // subscription: Joi.string().default("starter"),
   // token: Joi.string().default(null),
 });
 
 const loginUserJoiSchema = Joi.object({
-  email: Joi.string().required(),
-  // email: Joi.string().pattern(emailRegexp).required(),
+  //email: Joi.string().required(),
+  email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().required(),
 });
 
@@ -58,4 +58,4 @@ const schemas = {
 
 const User = model("user", userSchema);
 
-module.exports = { User, schemas }; //3.2 lesson 57:55 если запутаюсь с импортом
+module.exports = { User, schemas };
