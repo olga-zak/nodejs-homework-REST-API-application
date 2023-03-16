@@ -10,7 +10,7 @@ const authenticate = async (req, res, next) => {
     const { authorization } = req.headers;
     const [bearer, token] = authorization.split(" ");
     if (bearer !== "Bearer") {
-      throw returnError(401, "Not authorized - no Bearer");
+      throw returnError(401, "Not authorized");
     }
 
     const payload = jwt.verify(token, SECRET_KEY);
@@ -21,16 +21,17 @@ const authenticate = async (req, res, next) => {
 
     const user = await User.findById(payload.id);
 
-    if (!user) {
-      throw returnError(401, "Not authorized - no user found");
+    if (!user || !user.token || user.token !== token) {
+      throw returnError(401, "Not authorized");
     }
+
+    //Если пользователь существует и токен совпадает с тем, что находится в базе, записать его данные в req.user и вызвать метод next().
     req.user = user;
-    //Если пользователь существует и токен совпадает с тем, что находится в базе, записать его данные в req.user и вызвать методnext().
     next();
   } catch (error) {
     if (!error.status) {
       error.status = 401;
-      error.message = "Not authorized - token not valid";
+      error.message = "Not authorized";
     }
     next(error);
   }
