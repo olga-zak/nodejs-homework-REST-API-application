@@ -1,20 +1,13 @@
 const { addContact } = require("../services/contactsService");
-const { bodyValidation } = require("../validation/validation");
 
 const addContactController = async (req, res, next) => {
+  // console.log(req.user);
+  const { _id: owner } = req.user;
   const newContact = req.body;
 
-  const validationInfo = bodyValidation.validate(newContact);
-  if (validationInfo.error) {
-    res.status(400).json({ message: "missing required name field" });
-    return;
-  }
-
-  const result = await addContact(newContact);
+  const result = await addContact({ ...newContact, owner });
 
   res.status(201).json(result);
-
-  next;
 };
 
 module.exports = addContactController;
