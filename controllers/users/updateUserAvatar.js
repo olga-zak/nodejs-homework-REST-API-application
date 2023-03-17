@@ -3,7 +3,6 @@ const path = require("path");
 const Jimp = require("jimp");
 
 const { User } = require("../../schemas/userSchema");
-const { trusted } = require("mongoose");
 
 const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
 
