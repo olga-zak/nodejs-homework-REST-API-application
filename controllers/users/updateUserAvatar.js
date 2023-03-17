@@ -21,7 +21,7 @@ const updateUserAvatar = async (req, res) => {
   const avatarFromTemp = await Jimp.read(tempUpload); //берём картинку из tmp
   avatarFromTemp.resize(250, Jimp.AUTO).write(resultUpload); // resize the width to 250 and scale the height accordingly and save
 
-  fs.rename(tempUpload, resultUpload); //удаляем из tmp tempUpload(аватарку необработанную)
+  fs.unlink(tempUpload); //удаляем из tmp tempUpload(аватарку необработанную)
   const avatarURL = path.join("avatars", filename); //создаём новый avatarURL
   await User.findByIdAndUpdate(_id, { avatarURL }); //обновляем ссылку на аватар в базе
 
