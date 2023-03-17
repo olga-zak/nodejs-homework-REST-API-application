@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const gravatar = require("gravatar");
 
 const { User } = require("../../schemas/userSchema");
 
@@ -11,9 +12,14 @@ const register = async (req, res, next) => {
   if (user) {
     throw returnError(409, `email ${email} is in use`);
   }
-  //if email doesn't exist in db -> захешировать password + add user to the db
+  //if email doesn't exist in db -> захешировать password + create temp.avatar + add user to the db
   const hashPassword = await bcrypt.hash(password, 10);
-  const result = await User.create({ email, password: hashPassword });
+  const avatarURL = gravatar.url(email);
+  const result = await User.create({
+    email,
+    password: hashPassword,
+    avatarURL,
+  });
   res.status(201).json({
     user: { email: result.email, subscription: result.subscription },
   });
