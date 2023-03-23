@@ -6,7 +6,7 @@ const validateBody = require("../../validation/validateBody");
 const { schemas } = require("../../schemas/userSchema");
 const { controllerWrapper } = require("../../helpers");
 const controller = require("../../controllers/users");
-const { authenticate } = require("../../middlewares");
+const { authenticate, upload } = require("../../middlewares");
 
 // Регистрация
 //@ POST api/users/register
@@ -55,4 +55,11 @@ router.get(
   controllerWrapper(controller.getCurrentUser)
 );
 
+//Добавь возможность обновления аватарки, создав эндпоинт /users/avatars и используя метод PATCH
+router.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  controllerWrapper(controller.updateUserAvatar)
+);
 module.exports = router;
