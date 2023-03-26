@@ -62,4 +62,24 @@ router.patch(
   upload.single("avatar"),
   controllerWrapper(controller.updateUserAvatar)
 );
+
+// создать эндпоинт GET /users/verify/:verificationToken, где по параметру verificationToken мы будем искать пользователя в модели User
+// если пользователь с таким токеном не найден, необходимо вернуть Ошибку 'Not Found'
+// если пользователь найден - устанавливаем verificationToken в null, а поле verify ставим равным true в документе пользователя и возвращаем Успешный ответ
+router.get(
+  "/verify/:verificationToken",
+  controllerWrapper(controller.verifyEmail)
+);
+
+// POST /users/verify/
+// Получает body в формате { email }
+// Если в body нет обязательного поля email, возвращает json с ключом {"message": "missing required field email"} и статусом 400
+// Если с body все хорошо, выполняем повторную отправку письма с verificationToken на указанный email, но только если пользователь не верифицирован
+// Если пользователь уже прошел верификацию отправить json с ключом { message: "Verification has already been passed"} со статусом 400 Bad Request
+router.post(
+  "/verify",
+  validateBody(schemas.resendVerifEmailSchema),
+  controllerWrapper(controller.resendVerifEmail)
+);
+
 module.exports = router;
