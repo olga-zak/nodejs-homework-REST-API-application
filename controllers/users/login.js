@@ -11,8 +11,8 @@ const { SECRET_KEY } = process.env;
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  //если пытается заголиниться юзер с email которого а базе нет
-  if (!user) {
+  //если пытается заголиниться юзер с email которого а базе нет или not verified user
+  if (!user || !user.verify) {
     throw returnError(401, "email! or password is wrong");
   }
   //если есть юзер с email в базе, то сравниваем пароли (password - от пользователя, user.password - пароль из базы)
